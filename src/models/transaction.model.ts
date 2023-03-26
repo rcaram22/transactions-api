@@ -1,5 +1,5 @@
-import { Schema, Types, model, Model } from "mongoose";
-import { Transaction } from "../interfaces/transaction.interface";
+import { Schema, Types, model, Model } from 'mongoose';
+import { Transaction } from '../interfaces/transaction.interface';
 
 class TransactionModel {
   private _transactionSchema: any;
@@ -14,12 +14,12 @@ class TransactionModel {
       {
         accountFrom: {
           type: Types.ObjectId,
-          ref: "Account",
+          ref: 'Account',
           required: true,
         },
         accountTo: {
           type: Types.ObjectId,
-          ref: "Account",
+          ref: 'Account',
           required: true,
         },
         amount: {
@@ -36,7 +36,7 @@ class TransactionModel {
         },
         currency: {
           type: Types.ObjectId,
-          ref: "Currency",
+          ref: 'Currency',
           required: true,
         },
       },
@@ -46,7 +46,7 @@ class TransactionModel {
       }
     );
 
-    this._transactionModel = model("Transaction", this._transactionSchema);
+    this._transactionModel = model('Transaction', this._transactionSchema);
   }
 }
 

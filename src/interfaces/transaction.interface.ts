@@ -1,5 +1,5 @@
-import { Currency } from "./currency.interface";
-import { Account } from "./account.interface";
+import { Currency } from './currency.interface';
+import { Account } from './account.interface';
 
 export interface Transaction {
   accountFrom: Account;

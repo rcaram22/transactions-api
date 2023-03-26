@@ -1,5 +1,5 @@
-import { Schema, Types, model, Model } from "mongoose";
-import { Account } from "../interfaces/account.interface";
+import { Schema, Types, model, Model } from 'mongoose';
+import { Account } from '../interfaces/account.interface';
 
 class AccountModel {
   private _accountSchema: any;
@@ -14,12 +14,12 @@ class AccountModel {
       {
         owner: {
           type: Types.ObjectId,
-          ref: "User",
+          ref: 'User',
           required: true,
         },
         currency: {
           type: Types.ObjectId,
-          ref: "Currency",
+          ref: 'Currency',
           required: true,
         },
         balance: {
@@ -33,7 +33,7 @@ class AccountModel {
       }
     );
 
-    this._accountModel = model("Account", this._accountSchema);
+    this._accountModel = model('Account', this._accountSchema);
   }
 }
 

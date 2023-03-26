@@ -1,7 +1,7 @@
-import axios from "axios";
-import NodeCache from "node-cache";
-import { ErrorHandler } from "../utils/error.handler";
-import { CurrencyConversion } from "../interfaces/currency-conversion.interface";
+import axios from 'axios';
+import NodeCache from 'node-cache';
+import { ErrorHandler } from '../utils/error.handler';
+import { CurrencyConversion } from '../interfaces/currency-conversion.interface';
 
 const cache = new NodeCache();
 
@@ -9,7 +9,9 @@ const saveConversion = (conversion: CurrencyConversion) => {
   cache.set(`${conversion.fromCurrency}-${conversion.toCurrency}`, conversion);
 };
 
-const getTodayConversion = (conversion: CurrencyConversion): CurrencyConversion | undefined => {
+const getTodayConversion = (
+  conversion: CurrencyConversion
+): CurrencyConversion | undefined => {
   const today = new Date();
 
   if (
@@ -21,11 +23,13 @@ const getTodayConversion = (conversion: CurrencyConversion): CurrencyConversion 
   }
 };
 
-const getConversion = async (conversion: CurrencyConversion): Promise<CurrencyConversion> => {
+const getConversion = async (
+  conversion: CurrencyConversion
+): Promise<CurrencyConversion> => {
   let todayConversion = getTodayConversion(conversion);
 
   if (!todayConversion) {
-    const apikey = process.env.APILAYER_KEY || "";
+    const apikey = process.env.APILAYER_KEY || '';
     const url = `${process.env.APILAYER_BASE_URL}/latest?base=${conversion.fromCurrency}&symbols=${conversion.toCurrency}`;
     const response = await axios.get(url, { headers: { apikey: `${apikey}` } });
 
@@ -42,7 +46,11 @@ const getConversion = async (conversion: CurrencyConversion): Promise<CurrencyCo
   return todayConversion;
 };
 
-const convert = async (amount: number, fromCurrency: string, toCurrency: string) => {
+const convert = async (
+  amount: number,
+  fromCurrency: string,
+  toCurrency: string
+) => {
   try {
     const currencyConversion = {
       date: new Date(),
@@ -56,7 +64,7 @@ const convert = async (amount: number, fromCurrency: string, toCurrency: string)
     return conversionResult.rate * amount;
   } catch (error) {
     console.error(error);
-    throw new ErrorHandler(500, "Error while converting currency");
+    throw new ErrorHandler(500, 'Error while converting currency');
   }
 };
 

@@ -1,5 +1,5 @@
-import { Schema, model, Model } from "mongoose";
-import { User } from "../interfaces/user.interface";
+import { Schema, model, Model } from 'mongoose';
+import { User } from '../interfaces/user.interface';
 
 class UserModel {
   private _userSchema: any;
@@ -35,7 +35,7 @@ class UserModel {
       }
     );
 
-    this._userModel = model("User", this._userSchema);
+    this._userModel = model('User', this._userSchema);
   }
 }
 

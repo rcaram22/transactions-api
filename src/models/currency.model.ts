@@ -1,5 +1,5 @@
-import { Schema, model, Model } from "mongoose";
-import { Currency } from "../interfaces/currency.interface";
+import { Schema, model, Model } from 'mongoose';
+import { Currency } from '../interfaces/currency.interface';
 
 class CurrencyModel {
   private _currencySchema: any;
@@ -27,7 +27,7 @@ class CurrencyModel {
       }
     );
 
-    this._currencyModel = model("Currency", this._currencySchema);
+    this._currencyModel = model('Currency', this._currencySchema);
   }
 }
 

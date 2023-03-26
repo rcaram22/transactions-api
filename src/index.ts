@@ -1,10 +1,10 @@
-import express, { Express } from "express";
-import dotenv from "dotenv";
-import cors from "cors";
-import helmet from "helmet";
-import routes from "./routes";
-import { dbConnect } from "./config/mongo";
-import { ErrorHandler } from "./utils/error.handler";
+import express, { Express } from 'express';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import helmet from 'helmet';
+import routes from './routes';
+import { dbConnect } from './config/mongo';
+import { ErrorHandler } from './utils/error.handler';
 
 dotenv.config();
 
@@ -14,7 +14,7 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
-app.use("/api", routes);
+app.use('/api', routes);
 
 // 404 middleware
 app.use((req, res, next) => {
@@ -23,10 +23,10 @@ app.use((req, res, next) => {
 
 dbConnect()
   .then(() => {
-    console.log("Connected to DB");
+    console.log('Connected to DB');
   })
   .catch((err) => {
-    console.log("Error connecting to DB");
+    console.log('Error connecting to DB');
     console.error(err);
   });
 
