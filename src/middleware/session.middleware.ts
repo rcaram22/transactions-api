@@ -7,17 +7,23 @@ const invalidTokenResponse = (res: Response) => {
 
 const checkToken = (req: Request, res: Response, next: NextFunction) => {
   try {
-    const accessToken = req.headers.authorization || '';
-    const isValid = verifyToken(accessToken);
-
-    if (!isValid) {
-      invalidTokenResponse(res);
-    } else {
-      next();
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return invalidTokenResponse(res);
     }
+
+    const accessToken = authHeader.split(' ')[1];
+    const decodedUser = verifyToken(accessToken);
+
+    if (!decodedUser) {
+      return invalidTokenResponse(res);
+    }
+
+    (req as Request & { user?: any }).user = decodedUser;
+    next();
   } catch (error) {
-    console.error(error);
-    invalidTokenResponse(res);
+    console.error('Token verification failed:', error);
+    return invalidTokenResponse(res);
   }
 };
 

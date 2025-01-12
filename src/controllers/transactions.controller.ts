@@ -1,8 +1,7 @@
-import { Transaction } from '../interfaces/transaction.interface';
+import { NextFunction, Request, Response } from 'express';
 import AccountModel from '../models/account.model';
 import TransactionModel from '../models/transaction.model';
 import { ErrorHandler } from '../utils/error.handler';
-import { verifyToken } from '../utils/token.handler';
 
 const queryBuilder = (filters: any) => {
   const query: any = {};
@@ -23,31 +22,30 @@ const queryBuilder = (filters: any) => {
   return query;
 };
 
-const getUserTransactions = async (token: string, filters: any): Promise<Transaction[]> => {
+const getUserTransactions = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const user = (req as Request & { user?: any }).user;
+    const filters = req.query;
     let queryFilters: any = queryBuilder(filters);
-    const { id } = verifyToken(token);
     let accounts: any[] = [];
 
     if (!queryFilters.accountFrom) {
-      accounts = await AccountModel.find({ owner: id });
+      accounts = await AccountModel.find({ owner: user.id });
       queryFilters.accountFrom = { $in: accounts };
     } else {
       const account = await AccountModel.findById(queryFilters.accountFrom);
-      if (account?.owner.toString() !== id) {
-        throw new ErrorHandler(404, 'Account not found');
+      if (account?.owner.toString() !== user.id) {
+        return next(new ErrorHandler(404, 'Account not found'));
       }
     }
 
     const transactions = await TransactionModel.find(queryFilters).populate('currency');
-
-    return transactions;
-  } catch (error: any) {
-    if (error?.statusCode === 400 || error?.statusCode === 404) {
-      throw error;
-    }
+    res.status(200).json({
+      data: transactions,
+    });
+  } catch (error) {
     console.error(error);
-    throw new ErrorHandler(500, 'Error while getting transactions');
+    next(new ErrorHandler(500, 'Error while fetching transactions'));
   }
 };
 
