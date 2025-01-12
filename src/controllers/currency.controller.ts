@@ -9,9 +9,7 @@ const saveConversion = (conversion: CurrencyConversion) => {
   cache.set(`${conversion.fromCurrency}-${conversion.toCurrency}`, conversion);
 };
 
-const getTodayConversion = (
-  conversion: CurrencyConversion
-): CurrencyConversion | undefined => {
+const getTodayConversion = (conversion: CurrencyConversion): CurrencyConversion | undefined => {
   const today = new Date();
 
   if (
@@ -23,9 +21,7 @@ const getTodayConversion = (
   }
 };
 
-const getConversion = async (
-  conversion: CurrencyConversion
-): Promise<CurrencyConversion> => {
+const getConversion = async (conversion: CurrencyConversion): Promise<CurrencyConversion> => {
   let todayConversion = getTodayConversion(conversion);
 
   if (!todayConversion) {
@@ -46,11 +42,7 @@ const getConversion = async (
   return todayConversion;
 };
 
-const convert = async (
-  amount: number,
-  fromCurrency: string,
-  toCurrency: string
-) => {
+const convert = async (amount: number, fromCurrency: string, toCurrency: string) => {
   try {
     const currencyConversion = {
       date: new Date(),

@@ -6,10 +6,7 @@ import { verifyToken } from '../utils/token.handler';
 
 const queryBuilder = (filters: any) => {
   const query: any = {};
-  if (
-    Object.prototype.hasOwnProperty.call(filters, 'from') &&
-    Object.prototype.hasOwnProperty.call(filters, 'to')
-  ) {
+  if (Object.prototype.hasOwnProperty.call(filters, 'from') && Object.prototype.hasOwnProperty.call(filters, 'to')) {
     query['date'] = { $gte: filters.from, $lte: filters.to };
   } else {
     if (Object.prototype.hasOwnProperty.call(filters, 'from')) {
@@ -26,10 +23,7 @@ const queryBuilder = (filters: any) => {
   return query;
 };
 
-const getUserTransactions = async (
-  token: string,
-  filters: any
-): Promise<Transaction[]> => {
+const getUserTransactions = async (token: string, filters: any): Promise<Transaction[]> => {
   try {
     let queryFilters: any = queryBuilder(filters);
     const { id } = verifyToken(token);
@@ -45,9 +39,7 @@ const getUserTransactions = async (
       }
     }
 
-    const transactions = await TransactionModel.find(queryFilters).populate(
-      'currency'
-    );
+    const transactions = await TransactionModel.find(queryFilters).populate('currency');
 
     return transactions;
   } catch (error: any) {

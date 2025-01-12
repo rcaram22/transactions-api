@@ -8,10 +8,7 @@ import { convert } from './currency.controller';
 import { ErrorHandler } from '../utils/error.handler';
 import { verifyToken } from '../utils/token.handler';
 
-const checkAccountFrom = async (
-  transferData: Transfer,
-  userId: string
-): Promise<any> => {
+const checkAccountFrom = async (transferData: Transfer, userId: string): Promise<any> => {
   try {
     const dbUser = await UserModel.findById(userId);
 
@@ -48,10 +45,7 @@ const checkAccountTo = async (accountTo: string): Promise<any> => {
   }
 };
 
-const checkTransferData = async (
-  transferData: Transfer,
-  token: string
-): Promise<any> => {
+const checkTransferData = async (transferData: Transfer, token: string): Promise<any> => {
   try {
     //if the accounts are the same, throw an error
     if (transferData.accountFrom === transferData.accountTo) {
@@ -71,10 +65,7 @@ const checkTransferData = async (
   }
 };
 
-const transfer = async (
-  transferData: Transfer,
-  token: string
-): Promise<any> => {
+const transfer = async (transferData: Transfer, token: string): Promise<any> => {
   let session;
   try {
     await checkTransferData(transferData, token);
@@ -82,16 +73,12 @@ const transfer = async (
     session.startTransaction();
 
     // Withdrawal from accountFrom
-    const dbAccountFrom: any = await AccountModel.findById(
-      transferData.accountFrom
-    );
+    const dbAccountFrom: any = await AccountModel.findById(transferData.accountFrom);
     const transferCurrency = dbAccountFrom.currency;
     let withdrawalAmount = transferData.amount;
 
     // Deposit to accountTo
-    const dbAccountTo: any = await AccountModel.findById(
-      transferData.accountTo
-    );
+    const dbAccountTo: any = await AccountModel.findById(transferData.accountTo);
 
     if (dbAccountFrom.owner.toString() !== dbAccountTo.owner.toString()) {
       withdrawalAmount = transferData.amount * 1.01;
@@ -105,14 +92,9 @@ const transfer = async (
     if (dbAccountTo.currency.toString() !== transferCurrency.toString()) {
       const dbCurrencyFrom = await CurrencyModel.findById(transferCurrency);
       const dbCurrencyTo = await CurrencyModel.findById(dbAccountTo.currency);
-      if (!dbCurrencyFrom || !dbCurrencyTo)
-        throw new ErrorHandler(500, 'Error getting currencies');
+      if (!dbCurrencyFrom || !dbCurrencyTo) throw new ErrorHandler(500, 'Error getting currencies');
 
-      depositAmount = await convert(
-        transferData.amount,
-        dbCurrencyFrom.code,
-        dbCurrencyTo.code
-      );
+      depositAmount = await convert(transferData.amount, dbCurrencyFrom.code, dbCurrencyTo.code);
     }
     dbAccountTo.balance += depositAmount;
     await dbAccountTo.save();
