@@ -8,6 +8,7 @@ import { dbConnect } from './config/mongo';
 import { handleError } from './middleware/error.middleware';
 import { ErrorHandler } from './utils/error.handler';
 import logger from './utils/log.handler';
+import setupSwaggerDocs from './utils/swagger.handler';
 
 dotenv.config();
 
@@ -18,6 +19,8 @@ const port = process.env.PORT || 3001;
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev')); // Console log for development
 }
+
+setupSwaggerDocs(app);
 
 app.use(helmet());
 app.use(cors());
