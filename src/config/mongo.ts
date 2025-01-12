@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import mongoose from 'mongoose';
+import logger from '../utils/log.handler';
 
 /**
  * Connects to MongoDB using the provided DB_URI from the environment variables.
@@ -10,9 +11,9 @@ const dbConnect = async (): Promise<void> => {
 
   try {
     await mongoose.connect(DB_URI);
-    console.log('✅ Connected to MongoDB');
+    logger.info('✅ Connected to MongoDB');
   } catch (error) {
-    console.error('❌ Error connecting to MongoDB:', error);
+    logger.error('❌ Error connecting to MongoDB:', error);
     process.exit(1);
   }
 };
@@ -23,9 +24,9 @@ const dbConnect = async (): Promise<void> => {
 const dbDisconnect = async (): Promise<void> => {
   try {
     await mongoose.disconnect();
-    console.log('🔌 Disconnected from MongoDB');
+    logger.info('🔌 Disconnected from MongoDB');
   } catch (error) {
-    console.error('❌ Error disconnecting from MongoDB:', error);
+    logger.error('❌ Error disconnecting from MongoDB:', error);
   }
 };
 

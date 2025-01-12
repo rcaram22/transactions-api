@@ -2,6 +2,7 @@ import axios from 'axios';
 import NodeCache from 'node-cache';
 import { ErrorHandler } from '../utils/error.handler';
 import { CurrencyConversion } from '../interfaces/currency-conversion.interface';
+import logger from '../utils/log.handler';
 
 const cache = new NodeCache();
 
@@ -55,7 +56,7 @@ const convert = async (amount: number, fromCurrency: string, toCurrency: string)
 
     return conversionResult.rate * amount;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw new ErrorHandler(500, 'Error while converting currency');
   }
 };

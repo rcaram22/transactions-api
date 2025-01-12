@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { verifyToken } from '../utils/token.handler';
+import logger from '../utils/log.handler';
 
 const invalidTokenResponse = (res: Response) => {
   return res.status(401).send('Invalid token');
@@ -22,7 +23,7 @@ const checkToken = (req: Request, res: Response, next: NextFunction) => {
     (req as Request & { user?: any }).user = decodedUser;
     next();
   } catch (error) {
-    console.error('Token verification failed:', error);
+    logger.error('Token verification failed:', error);
     return invalidTokenResponse(res);
   }
 };

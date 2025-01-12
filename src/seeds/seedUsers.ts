@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import userModel from '../models/user.model';
+import logger from '../utils/log.handler';
 
 export const seedUsers = async () => {
   try {
@@ -7,7 +8,7 @@ export const seedUsers = async () => {
     const userCount = await userModel.countDocuments();
 
     if (userCount > 0) {
-      console.log('⚠️  Users already exist, skipping seeding.');
+      logger.info('⚠️  Users already exist, skipping seeding.');
       return;
     }
 
@@ -43,9 +44,9 @@ export const seedUsers = async () => {
 
     // Insert users with hashed passwords
     await userModel.insertMany(hashedUsers);
-    console.log('🎉 Users seeded successfully.');
+    logger.info('🎉 Users seeded successfully.');
   } catch (error) {
-    console.error('❌ Error seeding users:', error);
+    logger.error('❌ Error seeding users:', error);
     throw error;
   }
 };

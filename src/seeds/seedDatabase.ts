@@ -1,4 +1,5 @@
 import { dbConnect, dbDisconnect } from '../config/mongo';
+import logger from '../utils/log.handler';
 import { seedCurrencies } from './seedCurrencies';
 import { seedUsers } from './seedUsers';
 
@@ -7,10 +8,10 @@ const seedDatabase = async () => {
     await dbConnect();
     await seedUsers();
     await seedCurrencies();
-    console.log('🌱 Database seeding completed.');
+    logger.info('🌱 Database seeding completed.');
     await dbDisconnect();
   } catch (error) {
-    console.error('❌ Error during database seeding:', error);
+    logger.error('❌ Error during database seeding:', error);
     process.exit(1);
   }
 };

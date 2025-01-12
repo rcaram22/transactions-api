@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import userModel from '../models/user.model';
 import { ErrorHandler } from '../utils/error.handler';
 import { generateToken } from '../utils/token.handler';
+import logger from '../utils/log.handler';
 
 const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -19,7 +20,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     const access_token = generateToken(dbUser);
     res.status(200).json({ access_token });
   } catch (error) {
-    console.error('Error in login controller:', error);
+    logger.error('Error in login controller:', error);
     next(new ErrorHandler(500, 'Error while logging in'));
   }
 };
