@@ -1,3 +1,4 @@
+import { NextFunction, Request, Response } from 'express';
 import AccountModel from '../models/account.model';
 import CurrencyModel from '../models/currency.model';
 import UserModel from '../models/user.model';
@@ -6,7 +7,6 @@ import { Transaction } from '../interfaces/transaction.interface';
 import { Transfer } from '../interfaces/transfer.interface';
 import { convert } from './currency.controller';
 import { ErrorHandler } from '../utils/error.handler';
-import { verifyToken } from '../utils/token.handler';
 
 const checkAccountFrom = async (transferData: Transfer, userId: string): Promise<any> => {
   try {
@@ -45,7 +45,7 @@ const checkAccountTo = async (accountTo: string): Promise<any> => {
   }
 };
 
-const checkTransferData = async (transferData: Transfer, token: string): Promise<any> => {
+const checkTransferData = async (transferData: Transfer, userId: string): Promise<any> => {
   try {
     //if the accounts are the same, throw an error
     if (transferData.accountFrom === transferData.accountTo) {
@@ -57,18 +57,24 @@ const checkTransferData = async (transferData: Transfer, token: string): Promise
       throw new ErrorHandler(400, 'The amount must be greater than 0');
     }
 
-    const { id } = verifyToken(token);
-    await checkAccountFrom(transferData, id);
+    await checkAccountFrom(transferData, userId);
     await checkAccountTo(transferData.accountTo);
   } catch (error) {
     throw error;
   }
 };
 
-const transfer = async (transferData: Transfer, token: string): Promise<any> => {
+//const transfer = async (transferData: Transfer, token: string): Promise<any> => {
+const transfer = async (req: Request, res: Response, next: NextFunction) => {
   let session;
   try {
-    await checkTransferData(transferData, token);
+    const user = (req as Request & { user?: any }).user;
+    const transferData: Transfer = req.body;
+
+    console.log('transferData:', transferData);
+    console.log('user:', user);
+
+    await checkTransferData(transferData, user.id);
     session = await AccountModel.startSession();
     session.startTransaction();
 
