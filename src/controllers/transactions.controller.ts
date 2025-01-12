@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import AccountModel from '../models/account.model';
 import TransactionModel from '../models/transaction.model';
 import { ErrorHandler } from '../utils/error.handler';
+import logger from '../utils/log.handler';
 
 const queryBuilder = (filters: any) => {
   const query: any = {};
@@ -44,7 +45,7 @@ const getUserTransactions = async (req: Request, res: Response, next: NextFuncti
       data: transactions,
     });
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     next(new ErrorHandler(500, 'Error while fetching transactions'));
   }
 };

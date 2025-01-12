@@ -7,6 +7,7 @@ import { Transaction } from '../interfaces/transaction.interface';
 import { Transfer } from '../interfaces/transfer.interface';
 import { convert } from './currency.controller';
 import { ErrorHandler } from '../utils/error.handler';
+import logger from '../utils/log.handler';
 
 const checkAccountFrom = async (transferData: Transfer, userId: string): Promise<any> => {
   try {
@@ -122,7 +123,7 @@ const transfer = async (req: Request, res: Response, next: NextFunction) => {
     if (error?.statusCode === 400 || error?.statusCode === 404) {
       throw error;
     }
-    console.error(error);
+    logger.error(error);
     throw new ErrorHandler(500, 'Error while attempting to transfer');
   }
 };

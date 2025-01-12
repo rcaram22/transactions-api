@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { ErrorHandler } from './error.handler';
+import logger from './log.handler';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -25,7 +26,7 @@ const generateToken = (user: any) => {
 
     return token;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw new ErrorHandler(500, 'Error while generating token');
   }
 };

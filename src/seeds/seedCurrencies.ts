@@ -1,4 +1,5 @@
 import currencyModel from '../models/currency.model';
+import logger from '../utils/log.handler';
 
 export const seedCurrencies = async () => {
   try {
@@ -6,7 +7,7 @@ export const seedCurrencies = async () => {
     const currenciesCount = await currencyModel.countDocuments();
 
     if (currenciesCount > 0) {
-      console.log('⚠️  Currencies already exist, skipping seeding.');
+      logger.info('⚠️  Currencies already exist, skipping seeding.');
       return;
     }
 
@@ -27,9 +28,9 @@ export const seedCurrencies = async () => {
 
     // Insert currencies
     await currencyModel.insertMany(currencies);
-    console.log('🎉 Currencies seeded successfully.');
+    logger.info('🎉 Currencies seeded successfully.');
   } catch (error) {
-    console.error('❌ Error seeding currencies:', error);
+    logger.error('❌ Error seeding currencies:', error);
     throw error;
   }
 };

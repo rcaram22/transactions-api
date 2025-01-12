@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import accountModel from '../models/account.model';
 import currencyModel from '../models/currency.model';
 import { ErrorHandler } from '../utils/error.handler';
+import logger from '../utils/log.handler';
 
 const createAccount = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -39,7 +40,7 @@ const createAccount = async (req: Request, res: Response, next: NextFunction) =>
       },
     });
   } catch (error) {
-    console.error('Error creating account:', error);
+    logger.error('Error creating account:', error);
     next(new ErrorHandler(500, 'Error creating account'));
   }
 };
@@ -58,7 +59,7 @@ const getUserAccounts = async (req: Request, res: Response, next: NextFunction) 
       })),
     });
   } catch (error) {
-    console.error('Error fetching user accounts:', error);
+    logger.error('Error fetching user accounts:', error);
     next(new ErrorHandler(500, 'Error fetching user accounts'));
   }
 };
@@ -91,7 +92,7 @@ const getUserAccountById = async (req: Request, res: Response, next: NextFunctio
       },
     });
   } catch (error) {
-    console.error('Error fetching account:', error);
+    logger.error('Error fetching account:', error);
     next(new ErrorHandler(500, 'Error fetching account'));
   }
 };
