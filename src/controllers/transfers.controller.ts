@@ -71,9 +71,6 @@ const transfer = async (req: Request, res: Response, next: NextFunction) => {
     const user = (req as Request & { user?: any }).user;
     const transferData: Transfer = req.body;
 
-    console.log('transferData:', transferData);
-    console.log('user:', user);
-
     await checkTransferData(transferData, user.id);
     session = await AccountModel.startSession();
     session.startTransaction();

@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import mongoose from 'mongoose';
 import accountModel from '../models/account.model';
 import currencyModel from '../models/currency.model';
 import { ErrorHandler } from '../utils/error.handler';
@@ -43,8 +44,56 @@ const createAccount = async (req: Request, res: Response, next: NextFunction) =>
   }
 };
 
-const getUserAccounts = async (req: Request, res: Response, next: NextFunction) => {};
+const getUserAccounts = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = (req as Request & { user?: any }).user;
+    const accounts = await accountModel.find({ owner: user.id }).populate('currency').lean();
 
-const getUserAccountById = async (req: Request, res: Response, next: NextFunction) => {};
+    res.status(200).json({
+      data: accounts.map((account) => ({
+        id: account._id,
+        balance: account.balance,
+        currency: account.currency.code,
+        owner: user.username,
+      })),
+    });
+  } catch (error) {
+    console.error('Error fetching user accounts:', error);
+    next(new ErrorHandler(500, 'Error fetching user accounts'));
+  }
+};
+
+const getUserAccountById = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = (req as Request & { user?: any }).user;
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      //TODO: This could be validated before with an input validator middleware
+      return next(new ErrorHandler(400, 'Invalid account ID format'));
+    }
+
+    const account = await accountModel
+      .findOne({ _id: new mongoose.Types.ObjectId(id), owner: user.id })
+      .populate('currency')
+      .lean();
+
+    if (!account) {
+      return next(new ErrorHandler(404, 'Account not found'));
+    }
+
+    res.status(200).json({
+      data: {
+        id: account._id,
+        balance: account.balance,
+        currency: account.currency.code,
+        owner: user.username,
+      },
+    });
+  } catch (error) {
+    console.error('Error fetching account:', error);
+    next(new ErrorHandler(500, 'Error fetching account'));
+  }
+};
 
 export { createAccount, getUserAccounts, getUserAccountById };
